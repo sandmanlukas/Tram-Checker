@@ -20,11 +20,16 @@ async fn main() {
     let station = args.station;
     println!("Station: {}", &station);
 
+
     let result = api::get_access_token();
-    match result.await {
-        Ok(res) => println!("response: {}", res),
-        Err(e) => println!("error: {}", e),
-    }
-    
-    //println!("response: {:?}",res);
+    let token = match result.await {
+        Ok(res) => res,
+        Err(e) => panic!("error: {}", e),
+    };
+
+    let departure = match api::get_departure_board(token,"Chalmers".to_string(), "2022-07-09".to_string(), "12:12".to_string()).await{
+        Ok(res) => res,
+        Err(e) => panic!("error: {}", e),
+    };
+
 }
