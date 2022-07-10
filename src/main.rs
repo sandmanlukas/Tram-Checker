@@ -3,7 +3,9 @@
 mod api;
 
 use clap::Parser;
-use chrono::prelude::*;
+use chrono::*;
+use chrono_tz::Europe::Stockholm;
+use std::time::SystemTime;
 
 
 fn validate_station(station: &str) -> Result<(), String> {
@@ -49,12 +51,69 @@ struct Cli {
 
 }
 
+fn display_information(departures: Vec<api::Departure>, time: &String, date: &String) {
+    let stop = &departures[0].stop;
+    let current_time = NaiveTime::parse_from_str(time, "%H:%M").unwrap();
+    println!("Departures: {} at {} on {}",stop, time, date);
+    println!("-----------------------------------------------------------------");
+    println!("Line           Destination           Next(min)           Location");
+    println!("-----------------------------------------------------------------");
+    //println!("{}");
+
+    for departure in departures{
+        let line = departure.name.to_owned();
+        let split_destination: Vec<&str> = departure.direction.split(",").collect();
+        let destination = split_destination[0].to_string();
+        let mut next: String = "".to_string();
+
+        let track = &departure.track;
+        let departure_time = NaiveTime::parse_from_str(&departure.time, "%H:%M").unwrap();
+
+        let line_width = 15;
+        let dest_width = 22;
+        let mut next_width = 20;
+
+        let mut next_int = (departure_time - current_time)
+            .num_minutes()
+            .rem_euclid(1440)
+            .to_owned();
+
+        if next_int == 60 {
+            next = "1h".to_string();
+        } else if next_int > 60 {
+            let hours = (departure_time - current_time)
+                .num_hours()
+                .rem_euclid(24)
+                .to_string();
+            let minutes = next_int
+                .rem_euclid(60)
+                .to_string();
+            next = format!("{}h{}m",hours,minutes);
+        } else if next_int == 0 { //TODO: check if this gets the wheelchair emoji
+            next = "Now ".to_string();
+        } else {
+            next = next_int.to_string();
+        }
+
+        let accessibility = departure.accessibility.to_owned();
+        if Some("wheelChair".to_owned()) == accessibility { 
+            let wheelchair_emoji: &str = " \u{267F}";
+            next = format!("{}{}", next, wheelchair_emoji);
+            next_width = 19; // The wheelchair emoji takes one char in the and needed this for the padding to be correct.
+        }
+
+        println!("{line:line_width$}{destination:dest_width$}{next:next_width$}{}",track);
+
+    }
+
+}
 
 #[tokio::main]
 async fn main() {
     let args = Cli::parse();
     let station = args.station;
-    let dt = Utc::now();
+    let dt_utc = Utc::now();
+    let dt = dt_utc.with_timezone(&Stockholm);
 
     let time = match args.time {
         Some(p) => p,
@@ -72,25 +131,16 @@ async fn main() {
         Err(e) => panic!("error: {}", e),
     };
 
-    let location_id = match api::get_location_id(&token, station
-    ).await {
+    let location_id = match api::get_location_id(&token, &station).await {
         Ok(id) => id,
         Err(e) => panic!("error: {}", e),
     };
 
-    let departures = match api::get_departure_board(&token,location_id,date , time).await{
+    let departures = match api::get_departure_board(&token,location_id,&date , &time).await{
         Ok(res) => res,
         Err(e) => panic!("error: {}", e),
     };
 
-    println!("departures: {:#?}", departures);
+    display_information(departures,&time,&date);
 
 }
-
-
-/*
-Line Destination Next(min) Location
------------------------------------
-7    Nordstan      3 ♿       A
-8    Brunnsparken  4         C
-*/

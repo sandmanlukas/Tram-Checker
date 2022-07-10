@@ -128,7 +128,7 @@ pub struct CoordLocation {
 }
 
 
-pub async fn get_departure_board(token: &String, id: String, date: String, time: String) -> Result<Vec<Departure>, reqwest::Error>
+pub async fn get_departure_board(token: &String, id: String, date: &String, time: &String) -> Result<Vec<Departure>, reqwest::Error>
 {
     let client = reqwest::Client::new();
 
@@ -160,7 +160,7 @@ pub async fn get_departure_board(token: &String, id: String, date: String, time:
 
 // The API call pattern matches on the inputted stop name and tries to find the best possible match
 // This function returns the id of most probable match, returns an error if no possible matches are returned.
-pub async fn get_location_id(token: &String, stop: String) -> Result<String, reqwest::Error>{
+pub async fn get_location_id(token: &String, stop: &String) -> Result<String, reqwest::Error>{
     let client = reqwest::Client::new();
 
     let base_url = "https://api.vasttrafik.se/bin/rest.exe/v2/location.name?";
