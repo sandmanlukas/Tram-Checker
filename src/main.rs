@@ -51,9 +51,9 @@ fn display_information(departures: Vec<api::Departure>, time: &String, date: &St
     let stop = &departures[0].stop;
     let current_time = NaiveTime::parse_from_str(time, "%H:%M").unwrap();
     println!("Departures: {} at {} on {}",stop, time, date);
-    println!("-----------------------------------------------------------------");
-    println!("Line           Destination           Next(min)           Location");
-    println!("-----------------------------------------------------------------");
+    println!("----------------------------------------------------------------------------");
+    println!("Line           Destination                      Next(min)           Location");
+    println!("----------------------------------------------------------------------------");
 
     for departure in departures{
         let line = departure.name.to_owned();
@@ -71,7 +71,7 @@ fn display_information(departures: Vec<api::Departure>, time: &String, date: &St
         }
 
         let line_width = 15;
-        let dest_width = 22;
+        let dest_width = 33;
         let mut next_width = 20;
 
         let next_int = (departure_time - current_time)
@@ -100,7 +100,7 @@ fn display_information(departures: Vec<api::Departure>, time: &String, date: &St
         if Some("wheelChair".to_owned()) == accessibility {
             let wheelchair_emoji: &str = " \u{267F}";
             next = format!("{}{}", next, wheelchair_emoji);
-            next_width = 19; // The wheelchair emoji takes one char in the and needed this for the padding to be correct.
+            next_width = &next_width - 1; // The wheelchair emoji takes one char in the and needed this for the padding to be correct.
         }
 
         println!("{line:line_width$}{destination:dest_width$}{next:next_width$}{}",track);
