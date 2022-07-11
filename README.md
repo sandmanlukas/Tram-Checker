@@ -18,16 +18,15 @@ brew install tram_checker
 A Västtrafik API-token needs to be generated to be able to use the app, a base64 encoded string. 
 This is easily done by creating and app at [Västtrafik API](https://developer.vasttrafik.se/portal/#/) and then using the key and secret values running this command:
 ```bash
-echo "\<key\>:\<secret\>" | base64
+echo "<key>:<secret>" | base64
 ```
 
 and then adding this value to your ```~/.zshrc``` or ```~/.bashrc``` files as the following:
 ```bash
-export VASTTRAFIK_TOKEN = \<token\>
+export VASTTRAFIK_TOKEN = <token>
 ```
 
 More information about how Västtrafiks OAuth2 authentification works can be found [here](https://developer.vasttrafik.se/portal/#/guides/oauth2).
-```
 
 ## Usage
 
