@@ -2,6 +2,13 @@
 name = "tram_checker"
 version = "0.1.0"
 edition = "2021"
+authors = ["Lukas Sandman"]
+description = "A tool to get coming tram/bus departures from stations in Vastra Gotaland."
+readme = "README.md"
+homepage = "https://github.com/sandmanlukas/Tram-Checker"
+repository = "https://github.com/sandmanlukas/Tram-Checker"
+keywords = ["cli", "västtrafik"]
+categories = ["command-line-utilities"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -10,9 +17,6 @@ clap = { version = "3.2.8", features = ["derive"] }
 reqwest = { version = "0.11", features = ["json"] }
 tokio = { version = "1", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
 serde_derive = "1.0"
-#futures = "0.1.16"
-#hyper = "0.11.6"
 chrono = "0.4"
 chrono-tz = "0.4"
