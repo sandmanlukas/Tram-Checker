@@ -2,7 +2,7 @@
 CLI application to get upcoming tram/departures from a given tram stop in Gothenburg, it uses the [Västtrafik API](https://developer.vasttrafik.se/portal/#/) to accomplish this. Written in Rust.
 
 ## Screenshot
-![alt text](https://github.com/sandmanlukas/Tram-Checker/blob/master/tram_check.png "Screenshot of Tram-Checker v0.1.1")
+![alt text](https://github.com/sandmanlukas/Tram-Checker/blob/master/tram_check.png "Screenshot of Tram-Checker v0.1.1gi")
 
 
 
@@ -13,6 +13,14 @@ CLI application to get upcoming tram/departures from a given tram stop in Gothen
 ```bash
 brew tap sandmanlukas/tap
 brew install tram_checker
+
+A Västtrafik API-token needs to be generated to be able to use the app, this token is a base64 encoded string. This is easily done by creating and app at [Västtrafik API](https://developer.vasttrafik.se/portal/#/) and then using the key and secret values running this command:
+echo "\<key\>:\<secret\>" | base64
+
+and then adding this value to your ~/.zshrc or ~/.bashrc files as the following;
+export VASTTRAFIK_TOKEN = \<token\>
+
+More information about how Västtrafiks OAuth2 authentification works can be found [here](https://developer.vasttrafik.se/portal/#/guides/oauth2).
 ```
 
 ## Usage
