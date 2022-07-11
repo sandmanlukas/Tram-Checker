@@ -1,6 +1,10 @@
 # Tram-Checker
 CLI application to get upcoming tram/departures from a given tram stop in Gothenburg, it uses the [Västtrafik API](https://developer.vasttrafik.se/portal/#/) to accomplish this. Written in Rust.
 
+## Screenshot
+![alt text](https://github.com/sandmanlukas/Tram-Checker/blob/master/tram_check.png "Screenshot of Tram-Checker v0.1.1")
+
+
 
 ## Installation
 
