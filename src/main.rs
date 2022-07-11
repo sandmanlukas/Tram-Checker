@@ -1,12 +1,8 @@
-#![allow(unused)]
-
 mod api;
 
 use clap::Parser;
 use chrono::*;
 use chrono_tz::Europe::Stockholm;
-use std::time::SystemTime;
-
 
 fn validate_station(station: &str) -> Result<(), String> {
     if station.trim().len() != station.len() {
@@ -20,16 +16,16 @@ fn validate_station(station: &str) -> Result<(), String> {
 
 fn validate_date(date: &str) -> Result<(), String>{
     match NaiveDate::parse_from_str(date, "%Y-%m-%d"){
-        Ok(v) => Ok(()),
-        Err(e) => Err(String::from("Incorrect date format, date must be in YYYY-MM-DD format. Please try again.")),
+        Ok(_v) => Ok(()),
+        Err(_e) => Err(String::from("Incorrect date format, date must be in YYYY-MM-DD format. Please try again.")),
     }
 
 }
 
 fn validate_time(time: &str) -> Result<(), String>{
     match NaiveTime::parse_from_str(time, "%H:%M"){
-        Ok(v) => Ok(()),
-        Err(e) => Err(String::from("Incorrect time format, time must be in HH:MM format. Please try again.")),
+        Ok(_v) => Ok(()),
+        Err(_e) => Err(String::from("Incorrect time format, time must be in HH:MM format. Please try again.")),
     }
 
 }
@@ -58,22 +54,27 @@ fn display_information(departures: Vec<api::Departure>, time: &String, date: &St
     println!("-----------------------------------------------------------------");
     println!("Line           Destination           Next(min)           Location");
     println!("-----------------------------------------------------------------");
-    //println!("{}");
 
     for departure in departures{
         let line = departure.name.to_owned();
         let split_destination: Vec<&str> = departure.direction.split(",").collect();
         let destination = split_destination[0].to_string();
-        let mut next: String = "".to_string();
+        let mut next;
 
         let track = &departure.track;
         let departure_time = NaiveTime::parse_from_str(&departure.time, "%H:%M").unwrap();
+
+        // Sometimes departures with a departure time before the supplied time is returned.
+        // These are probably delayed departures, skipping these. Might support in future version.
+        if departure_time < current_time{
+            continue;
+        }
 
         let line_width = 15;
         let dest_width = 22;
         let mut next_width = 20;
 
-        let mut next_int = (departure_time - current_time)
+        let next_int = (departure_time - current_time)
             .num_minutes()
             .rem_euclid(1440)
             .to_owned();
@@ -96,7 +97,7 @@ fn display_information(departures: Vec<api::Departure>, time: &String, date: &St
         }
 
         let accessibility = departure.accessibility.to_owned();
-        if Some("wheelChair".to_owned()) == accessibility { 
+        if Some("wheelChair".to_owned()) == accessibility {
             let wheelchair_emoji: &str = " \u{267F}";
             next = format!("{}{}", next, wheelchair_emoji);
             next_width = 19; // The wheelchair emoji takes one char in the and needed this for the padding to be correct.

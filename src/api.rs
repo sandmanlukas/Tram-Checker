@@ -1,10 +1,7 @@
-//use serde::Deserialize;
 use serde_derive::Deserialize;
 use serde_derive::Serialize;
-use serde_json::Value;
 use reqwest;
 use std::env;
-//use curl::easy::{Easy,List};
 
 
 // Checks whether Västtrafik auth token is in environment variables.
@@ -13,7 +10,7 @@ fn get_env_token() -> String{
 
     match env::var(token) {
         Ok(v) => v,
-        Err(e) => panic!("\nERROR: {} is not set. VASTTRAFIK_TOKEN should be set to the base64 encoding of key:secret as one of your environment variables.\nThe key and secret can be found at https://developer.vasttrafik.se/portal/#/applications", token)
+        Err(e) => panic!("{} is not set. VASTTRAFIK_TOKEN should be set to the base64 encoding of key:secret as one of your environment variables.\nThe key and secret can be found at https://developer.vasttrafik.se/portal/#/applications \nError: {}", token,e)
     }
 
 
@@ -38,9 +35,8 @@ pub async fn get_access_token() -> Result<String,reqwest::Error>{
         .await?;
 
     let access_token = res.access_token;
-    let expires_in = res.expires_in; //TODO: add code to check if token is about to expire, <60s left?
+    let _expires_in = res.expires_in; //TODO: add code to check if token is about to expire, <60s left?
 
-    //println!("token: {}, expires: {}", access_token, expires_in);
     Ok(access_token)
 
 }
@@ -70,21 +66,12 @@ pub struct Departure {
     pub journey_number: String,
     #[serde(rename = "type")]
     pub type_field: String,
-    //pub stopid: String,
     pub stop: String,
     pub time: String,
     pub date: String,
-    //pub journeyid: String,
     pub direction: String,
     pub track: String,
-    //pub rt_time: Option<String>,
-    //pub rt_date: Option<String>,
-    //pub fg_color: String,
-    //pub bg_color: String,
-    //pub stroke: String,
     pub accessibility: Option<String>,
-    //#[serde(rename = "JourneyDetailRef")]
-    //pub journey_detail_ref: JourneyDetailRef,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -167,7 +154,7 @@ pub async fn get_location_id(token: &String, stop: &String) -> Result<String, re
     let stop_url = format!("input={}&", stop);
     let format_url = "format=json";
     let url = format!("{}{}{}", base_url, stop_url, format_url);
-    
+
     let res = client.get(&url)
         .header("Authorization", "Bearer ".to_owned() + &token)
         .send()
