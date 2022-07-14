@@ -1,20 +1,12 @@
 use serde_derive::Deserialize;
 use serde_derive::Serialize;
 use reqwest;
-use std::env;
+use whoami;
+use std::collections::hash_map::DefaultHasher;
+use std::hash::{Hash, Hasher};
 
 
-// Checks whether Västtrafik auth token is in environment variables.
-fn get_env_token() -> String{
-    let token = "VASTTRAFIK_TOKEN";
 
-    match env::var(token) {
-        Ok(v) => v,
-        Err(e) => panic!("{} is not set. VASTTRAFIK_TOKEN should be set to the base64 encoding of key:secret as one of your environment variables.\nThe key and secret can be found at https://developer.vasttrafik.se/portal/#/applications \nError: {}", token,e)
-    }
-
-
-}
 
 #[derive(Deserialize)]
 struct Vasttrafik {
@@ -22,13 +14,26 @@ struct Vasttrafik {
     expires_in: u32
 }
 
+fn calculate_hash<T: Hash>(t: &T) -> u64 {
+    let mut s = DefaultHasher::new();
+    t.hash(&mut s);
+    s.finish()
+}
 
 pub async fn get_access_token() -> Result<String,reqwest::Error>{
-    let secret = get_env_token();
+    // Insert VÄSTTRAFIK token here if you want to further develop on your own.
+    // A key and secret can be created at https://developer.vasttrafik.se/portal/ and then
+    // let token be the base64 encoding of key:secret.
+    let token = "INSERT_TOKEN_HERE".to_string();
+
     let client = reqwest::Client::new();
+    let user = whoami::username();
+    let device_id = calculate_hash(&user).to_string();
+    let body = format!("grant_type=client_credentials&scope=device_{}",device_id);
+
     let res = client.post("https://api.vasttrafik.se:443/token")
-        .body("grant_type=client_credentials") // TODO: add &scope=<device_id>
-        .header("Authorization", "Basic ".to_owned() + &secret)
+        .body(body) // TODO: add &scope=<device_id>
+        .header("Authorization", "Basic ".to_owned() + &token)
         .send()
         .await?
         .json::<Vasttrafik>()
