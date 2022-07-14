@@ -8,7 +8,7 @@ CLI application to get upcoming tram/departures from a given tram stop in Gothen
 
 ## Installation
 
-### For Mac
+### For M1 Mac
 
 ```bash
 brew tap sandmanlukas/tap
