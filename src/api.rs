@@ -6,8 +6,6 @@ use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 
 
-
-
 #[derive(Deserialize)]
 struct Vasttrafik {
     access_token: String,
@@ -32,7 +30,7 @@ pub async fn get_access_token() -> Result<String,reqwest::Error>{
     let body = format!("grant_type=client_credentials&scope=device_{}",device_id);
 
     let res = client.post("https://api.vasttrafik.se:443/token")
-        .body(body) // TODO: add &scope=<device_id>
+        .body(body)
         .header("Authorization", "Basic ".to_owned() + &token)
         .send()
         .await?
