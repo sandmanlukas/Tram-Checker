@@ -13,10 +13,9 @@ CLI application to get upcoming tram/departures from a given tram stop in Gothen
 ```bash
 brew tap sandmanlukas/tap
 brew install tram_checker
-
+```
 
 ### Generate own token.
-```
 A Västtrafik API-token needs to be generated to be able to compile the code.
 This is easily done by creating and app at [Västtrafik API](https://developer.vasttrafik.se/portal/#/) and then to get your ```<token>``` you can run the following command.:
 ```bash
