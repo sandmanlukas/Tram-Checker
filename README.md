@@ -16,8 +16,10 @@ brew install tram_checker
 ```
 
 ### x86_64-apple-darwin
+This requires ```rust```, can be installed with ```brew install rust```.
+
 ```bash
-    curl -LSfs https://github.com/sandmanlukas/tram_checker/raw/master/install.sh | \
+ curl -LSfs https://github.com/sandmanlukas/tram_checker/raw/master/install.sh | \
         sh -s -- --git sandmanlukas/tram_checker
 ```
 ### Generate own token.
