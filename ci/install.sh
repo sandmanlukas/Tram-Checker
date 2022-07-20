@@ -16,6 +16,10 @@ main() {
         aarch64-apple-ios)
             rustup target install aarch64-apple-ios
             ;;
+        aarch64-apple-darwin)
+            rustup target add aarch64-apple-darwin
+            rustup target install aarch64-apple-darwin
+            ;;
         armv7-apple-ios)
             rustup target install armv7-apple-ios
             ;;

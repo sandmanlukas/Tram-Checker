@@ -15,8 +15,8 @@ main() {
     cargo test --target $TARGET
     cargo test --target $TARGET --release
 
-    cargo run --target $TARGET
-    cargo run --target $TARGET --release
+    cargo run --target $TARGET Kapellplatsen
+    cargo run --target $TARGET --release Kapellplatsen
 }
 
 # we don't run the "test phase" when doing deploys
