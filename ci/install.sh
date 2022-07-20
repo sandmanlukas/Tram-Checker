@@ -31,7 +31,7 @@ main() {
     esac
 
     # This fetches latest stable release
-    local tag=$(git ls-remote --tags --refs --exit-code https://github.com/sandmanlukas/tram-checker \
+    local tag=$(git ls-remote --tags --refs --exit-code https://github.com/sandmanlukas/tram_checker \
                        | cut -d/ -f3 \
                        | grep -E '^v[0.1.0-9.]+$' \
                        | $sort --version-sort \
@@ -39,7 +39,7 @@ main() {
     curl -LSfs https://github.com/sandmanlukas/tram_checker/raw/master/install.sh | \
         sh -s -- \
            --force \
-           --git sandmanlukas/tram-checker \
+           --git sandmanlukas/tram_checker \
            --tag $tag \
            --target $target
 }
