@@ -36,7 +36,7 @@ main() {
                        | grep -E '^v[0.1.0-9.]+$' \
                        | $sort --version-sort \
                        | tail -n1)
-    curl -LSfs https://japaric.github.io/trust/install.sh | \
+    curl -LSfs https://github.com/sandmanlukas/tram_checker/raw/master/install.sh | \
         sh -s -- \
            --force \
            --git sandmanlukas/tram-checker \
