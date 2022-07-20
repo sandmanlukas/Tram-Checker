@@ -105,7 +105,7 @@ if [ -z $git ]; then
     err 'must specify a git repository using `--git`. Example: `install.sh --git japaric/cross`'
 fi
 
-url="https://github.com/$git"
+url="https://api.github.com/repos/$git"
 say_err "GitHub repository: $url"
 
 if [ -z $crate ]; then
@@ -114,10 +114,11 @@ fi
 
 say_err "Crate: $crate"
 
-url="$url/releases"
+url="$url/releases/latest"
+
 
 if [ -z $tag ]; then
-    tag=$(curl -s "$url/latest" | cut -d'"' -f2 | rev | cut -d'/' -f1 | rev)
+    tag=$(curl -s $url 2>&1 | grep "tag_name" | sed -e 's/.*"tag_name": "\(.*\)".*/\1/')
     say_err "Tag: latest ($tag)"
 else
     say_err "Tag: $tag"
@@ -135,7 +136,9 @@ fi
 
 say_err "Installing to: $dest"
 
-url="$url/download/$tag/$crate-$tag-$target.tar.gz"
+url="https://github.com/$git/releases/download/$tag/$crate-$tag-$target.tar.gz"
+
+say_err "Url: $url"
 
 td=$(mktemp -d || mktemp -d -t tmp)
 curl -sL $url | tar -C $td -xz
