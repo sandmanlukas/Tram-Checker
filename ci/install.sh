@@ -39,7 +39,7 @@ main() {
     curl -LSfs https://japaric.github.io/trust/install.sh | \
         sh -s -- \
            --force \
-           --git sandmanlukas/tram_checker \
+           --git sandmanlukas/tram-checker \
            --tag $tag \
            --target $target
 }
