@@ -1,6 +1,6 @@
 [package]
 name = "tram_checker"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
 authors = ["Lukas Sandman"]
 description = "A tool to get coming tram/bus departures from stations in Vastra Gotaland. Utilizes the Västtrafik API."
